@@ -1,0 +1,6 @@
+.idea
+*.pyc
+.env
+.venv/
+Pipfile.lock
+db.sqlite3
