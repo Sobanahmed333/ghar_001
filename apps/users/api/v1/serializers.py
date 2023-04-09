@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from django.http import HttpRequest
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework import serializers
 
 User = get_user_model()
@@ -44,3 +47,25 @@ class SignupSerializer(serializers.ModelSerializer):
     def save(self, request=None):
         """rest_auth passes request so we must override to accept it"""
         return super().save()
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_old_password(self, password):
+        if not check_password(password, self.context.user.password):
+            raise serializers.ValidationError(
+                _("Invalid password."))
+        return password
+
+    def validate_new_password(self, password):
+        if check_password(password, self.context.user.password):
+            raise serializers.ValidationError(
+                _("New password can't be same as old one."))
+        return password
