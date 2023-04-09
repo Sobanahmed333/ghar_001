@@ -32,7 +32,9 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'djstripe'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djstripe',
 ]
 
 LOCAL_APPS = [
@@ -131,3 +133,12 @@ STRIPE_LIVE_MODE = False  # Change to True in production
 DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # Get it from the section in the Stripe dashboard where you added the webhook endpoint
 DJSTRIPE_USE_NATIVE_JSONFIELD = True  # We recommend setting to True for new installations
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
