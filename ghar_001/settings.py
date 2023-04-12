@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djstripe',
+    'django_rest_passwordreset',
 ]
 
 LOCAL_APPS = [
@@ -142,3 +143,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+FROM_EMAIL = env.str("FROM_EMAIL", "noreply@ghar.local")

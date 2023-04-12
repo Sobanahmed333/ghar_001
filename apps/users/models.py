@@ -1,7 +1,13 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 from django.db import models
+from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django_rest_passwordreset.signals import reset_password_token_created
+
+from ghar_001.settings import FROM_EMAIL
 
 
 class CustomUserManager(BaseUserManager):
@@ -48,3 +54,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    subject = "Password Reset for Ghar"
+    message = f"{reverse('password_reset:reset-password-request')}?token={reset_password_token.key}"
+    send_mail(subject, message, FROM_EMAIL, [reset_password_token.user.email])
